@@ -1,0 +1,65 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getNewsList } from '../../lib/microcms';
+
+// 記事一覧を取得（ダミーデータまたはmicroCMS）
+const response = await getNewsList({ limit: 20 });
+const newsList = response.contents;
+
+// 日付フォーマット関数
+const formatDate = (dateString: string) => {
+  const date = new Date(dateString);
+  return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
+};
+---
+
+<Layout title="お知らせ一覧" description="ラフマット株式会社（S-GROUP）の最新情報、お知らせ、採用に関する情報の一覧です。">
+  <div class="bg-surface-50 py-16 md:py-24">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="text-center mb-16">
+        <h1 class="text-4xl font-black text-surface-900 tracking-tight mb-4">お知らせ</h1>
+        <div class="w-16 h-1 bg-accent-400 mx-auto rounded-full"></div>
+      </div>
+
+      <div class="bg-white rounded-2xl shadow-sm border border-surface-200 overflow-hidden min-h-[400px]">
+        {newsList.length === 0 ? (
+          <div class="p-12 text-center text-surface-500 font-medium">
+            現在、お知らせはございません。
+          </div>
+        ) : (
+          <div class="divide-y divide-surface-100">
+            {newsList.map((news) => (
+              <a href={`/news/${news.id}`} class="block p-6 sm:p-8 hover:bg-surface-50 transition-colors group">
+                <div class="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6">
+                  <div class="flex items-center gap-4 min-w-[200px]">
+                    <time class="text-surface-500 font-medium whitespace-nowrap">
+                      {formatDate(news.publishedAt || news.createdAt)}
+                    </time>
+                    {news.category && news.category.length > 0 && (
+                      <span class={`inline-block px-3 py-1 text-xs font-bold rounded-full w-fit ${
+                        news.category[0].name === '採用' ? 'bg-primary-100 text-primary-800' : 'bg-surface-100 text-surface-600'
+                      }`}>
+                        {news.category[0].name}
+                      </span>
+                    )}
+                  </div>
+                  <h2 class="text-lg font-bold text-surface-900 group-hover:text-accent-600 transition-colors line-clamp-2 leading-snug">
+                    {news.title}
+                  </h2>
+                </div>
+              </a>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <div class="mt-12 text-center">
+        <a href="/" class="inline-flex items-center text-primary-600 font-bold hover:text-primary-800 transition-colors">
+          <svg class="w-4 h-4 mr-2 rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+          ホームへ戻る
+        </a>
+      </div>
+    </div>
+  </div>
+</Layout> 

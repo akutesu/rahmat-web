@@ -1,0 +1,60 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getNewsList, getNewsDetail, type News } from '../../lib/microcms';
+
+// 静的パス(SSG)を生成
+export async function getStaticPaths() {
+  const response = await getNewsList({ limit: 100 });
+  return response.contents.map((news: News) => ({
+    params: { newsId: news.id },
+  }));
+}
+
+const { newsId } = Astro.params;
+const news = await getNewsDetail(newsId as string);
+
+// 日付フォーマット関数
+const formatDate = (dateString: string) => {
+  const date = new Date(dateString);
+  return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
+};
+---
+
+<Layout title={news.title} description={`${news.title}についてのお知らせです。`}>
+  <article class="bg-surface-50 py-16 md:py-24 min-h-screen">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="bg-white rounded-2xl shadow-sm border border-surface-200 overflow-hidden">
+        <header class="p-8 md:p-12 border-b border-surface-100 bg-surface-50/50">
+          <div class="flex items-center gap-4 mb-6">
+            <time class="text-surface-500 font-medium">
+              {formatDate(news.publishedAt || news.createdAt)}
+            </time>
+            {news.category && news.category.length > 0 && (
+              <span class={`inline-block px-3 py-1 text-xs font-bold rounded-full w-fit ${
+                news.category[0].name === '採用' ? 'bg-primary-100 text-primary-800' : 'bg-surface-100 text-surface-600'
+              }`}>
+                {news.category[0].name}
+              </span>
+            )}
+          </div>
+          <h1 class="text-2xl md:text-3xl font-black text-surface-900 leading-tight">
+            {news.title}
+          </h1>
+        </header>
+        
+        <div class="p-8 md:p-12">
+          <!-- CMS等から取得したHTMLをそのまま描画 -->
+          <div class="prose prose-surface max-w-none prose-headings:font-bold prose-headings:text-surface-900 prose-a:text-accent-600 hover:prose-a:text-accent-500 prose-p:leading-relaxed" set:html={news.content} />
+        </div>
+      </div>
+
+      <div class="mt-12 text-center">
+        <a href="/news" class="inline-flex items-center text-primary-600 font-bold hover:text-primary-800 transition-colors">
+          <svg class="w-4 h-4 mr-2 rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+          お知らせ一覧へ戻る
+        </a>
+      </div>
+    </div>
+  </article>
+</Layout>

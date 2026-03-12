@@ -1,0 +1,93 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = 'ラフマット株式会社（RAHMAT road master）の公式ホームページです。' } = Astro.props;
+---
+
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    
+    <title>{title} | ラフマット株式会社</title>
+    <meta name="description" content={description} />
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+  </head>
+  <body class="bg-surface-50 text-surface-800 font-sans antialiased min-h-screen flex flex-col">
+    <!-- Header -->
+    <header class="bg-white/90 backdrop-blur-md sticky top-0 z-50 border-b border-surface-100 shadow-sm">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+          <div class="flex-shrink-0 flex items-center">
+            <a href="/" class="flex items-center gap-3">
+              <!-- 名刺風の丸いロゴマークをCSSで再現 -->
+              <div class="w-10 h-10 rounded-full bg-[#1c1c1c] flex items-center justify-center relative overflow-hidden shadow-sm">
+                <!-- 黄色い鳥（道路）のモチーフを簡易表現 -->
+                <div class="absolute w-6 h-6 bg-accent-400 rounded-full -left-1 bottom-0 transform rotate-45"></div>
+              </div>
+              <div class="flex flex-col">
+                 <span class="text-xl font-black text-[#1c1c1c] leading-none tracking-tight font-serif min-w-max">RAHMAT</span>
+                 <span class="text-[0.6rem] font-bold text-[#1c1c1c] leading-none tracking-widest uppercase mt-0.5">road master</span>
+              </div>
+            </a>
+          </div>
+          <nav class="hidden md:flex space-x-8">
+            <a href="/#about" class="text-surface-600 hover:text-accent-600 font-medium transition-colors">会社概要</a>
+            <a href="/#services" class="text-surface-600 hover:text-accent-600 font-medium transition-colors">事業内容</a>
+            <a href="/news" class="text-surface-600 hover:text-accent-600 font-medium transition-colors">お知らせ</a>
+            <a href="/#recruit" class="text-surface-600 hover:text-accent-600 font-medium transition-colors">採用情報</a>
+          </nav>
+          <div class="hidden md:flex items-center">
+            <a href="/#contact" class="inline-flex items-center justify-center px-6 py-2 border border-transparent rounded-full shadow-sm text-sm font-bold text-surface-900 bg-accent-400 hover:bg-accent-500 hover:shadow-md transition-all">
+              お問い合わせ
+            </a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="flex-grow">
+      <slot />
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-[#1c1c1c] text-surface-50 pt-16 pb-8 border-t-[16px] border-surface-300 relative overflow-hidden">
+      <!-- フッター上部のグラデーションライン (名刺下部のデザインを模倣) -->
+      <div class="absolute top-0 inset-x-0 h-4 bg-gradient-to-b from-white/20 to-transparent"></div>
+      
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="md:flex md:items-center md:justify-between border-b border-surface-700 pb-8 mb-8">
+          <div class="flex flex-col justify-center md:justify-start mb-6 md:mb-0">
+            <span class="text-2xl font-black tracking-wider text-white font-serif">RAHMAT</span>
+            <span class="text-xs font-bold tracking-widest text-white uppercase mt-1">road master</span>
+          </div>
+          <nav class="flex flex-wrap justify-center md:justify-end gap-x-8 gap-y-4">
+             <a href="/#about" class="text-surface-300 hover:text-accent-400 transition-colors text-sm">会社概要</a>
+             <a href="/#services" class="text-surface-300 hover:text-accent-400 transition-colors text-sm">事業内容</a>
+             <a href="/news" class="text-surface-300 hover:text-accent-400 transition-colors text-sm">お知らせ</a>
+             <a href="/#recruit" class="text-surface-300 hover:text-accent-400 transition-colors text-sm">採用情報</a>
+             <a href="/#contact" class="text-surface-300 hover:text-accent-400 transition-colors text-sm">お問い合わせ</a>
+          </nav>
+        </div>
+        <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+          <div class="text-center text-sm text-surface-400">
+            &copy; {new Date().getFullYear()} ラフマット株式会社 All rights reserved.
+          </div>
+          <!-- 名刺右下のS-GROUPロゴをテキストで簡易再現 -->
+          <div class="font-black text-white text-lg tracking-widest font-serif">S - GROUP</div>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

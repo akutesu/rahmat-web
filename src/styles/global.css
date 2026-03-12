@@ -1,0 +1,37 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@theme {
+  /* 
+   * RAHMAT Design System
+   * 名刺のロゴに合わせた「ブラック＆イエロー」ベースの配色
+   */
+  --color-primary-50: #f8fafc;
+  --color-primary-100: #f1f5f9;
+  --color-primary-500: #64748b;
+  --color-primary-600: #475569;
+  --color-primary-700: #334155;
+  --color-primary-800: #1e293b;
+  --color-primary-900: #0f172a; /* 名刺の黒に近い色 */
+
+  --color-accent-400: #fbbf24; /* 名刺のイエロー/ゴールドに近い色 */
+  --color-accent-500: #f59e0b;
+  --color-accent-600: #d97706;
+
+  --color-surface-50: #ffffff;
+  --color-surface-100: #f8fafc;
+  --color-surface-800: #1e293b;
+  --color-surface-900: #0f172a;
+
+  --font-sans: 'Inter', 'Helvetica Neue', 'Arial', 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'Meiryo', sans-serif;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-surface-50);
+    color: var(--color-surface-800);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}

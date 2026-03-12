@@ -1,0 +1,350 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getNewsList } from '../lib/microcms';
+
+// 最新のお知らせを3件取得
+const newsResponse = await getNewsList({ limit: 3 });
+const topNews = newsResponse.contents;
+
+const formatDate = (dateString: string) => {
+  const date = new Date(dateString);
+  return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
+};
+---
+
+<Layout title="ホーム">
+  <!-- Hero Section -->
+  <section class="relative bg-gradient-to-br from-primary-900 via-primary-800 to-primary-900 text-white overflow-hidden">
+    <!-- 背景パターン -->
+    <div class="absolute inset-0 opacity-[0.03]">
+      <svg class="h-full w-full" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+            <path d="M0 40V0H40" fill="none" stroke="currentColor" stroke-width="1"></path>
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#grid)"></rect>
+      </svg>
+    </div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32 relative z-10 flex flex-col md:flex-row items-center">
+      <div class="w-full md:w-1/2 md:pr-12 text-center md:text-left">
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight mb-6 leading-tight">
+          安心をデザインし、<br class="hidden md:block" />
+          <span class="text-accent-400">未来を守る。</span>
+        </h1>
+        <p class="text-lg md:text-xl text-primary-100 mb-8 max-w-2xl mx-auto md:mx-0 font-medium">
+          ラフマット株式会社は、最新のセキュリティ技術と心温まるサービスで、地域の皆様に安全と安心をお届けします。私たちと一緒に働きませんか？
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+          <a href="#recruit" class="px-8 py-4 bg-accent-400 hover:bg-accent-500 text-surface-900 font-bold rounded-full shadow-lg hover:shadow-xl transition-all text-center">
+            採用情報を見る
+          </a>
+          <a href="#services" class="px-8 py-4 bg-transparent hover:bg-primary-800 text-white font-bold rounded-full shadow-lg border-2 border-primary-500 hover:border-primary-400 transition-all text-center">
+            事業内容を見る
+          </a>
+        </div>
+      </div>
+      <div class="w-full md:w-1/2 mt-12 md:mt-0">
+        <div class="relative rounded-2xl overflow-hidden shadow-2xl aspect-video bg-surface-200 border-4 border-surface-800">
+           <!-- 画像ダミー -->
+           <div class="absolute inset-0 bg-gradient-to-tr from-surface-800 to-surface-600 flex items-center justify-center">
+             <span class="text-surface-300 font-medium tracking-wide">笑顔で働く警備スタッフのイメージ画像</span>
+           </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- News Section -->
+  <section id="news" class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold text-surface-900 mb-4 tracking-tight">お知らせ</h2>
+        <div class="w-16 h-1 bg-accent-400 mx-auto rounded-full"></div>
+      </div>
+      <div class="max-w-3xl mx-auto divide-y divide-surface-100">
+        {topNews.length === 0 ? (
+          <div class="py-8 text-center text-surface-500">お知らせはまだありません。</div>
+        ) : (
+          topNews.map(news => (
+            <a href={`/news/${news.id}`} class="block py-6 hover:bg-surface-50 transition-colors px-4 -mx-4 rounded-lg">
+              <div class="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-6">
+                <time class="text-surface-500 font-medium whitespace-nowrap">{formatDate(news.publishedAt || news.createdAt)}</time>
+                {news.category && news.category.length > 0 && (
+                  <span class={`inline-block px-3 py-1 text-xs font-bold rounded-full w-fit ${
+                    news.category[0].name === '採用' ? 'bg-primary-100 text-primary-800' : 'bg-surface-100 text-surface-600'
+                  }`}>
+                    {news.category[0].name}
+                  </span>
+                )}
+                <span class="text-surface-900 font-medium hover:text-accent-600 transition-colors line-clamp-2 md:line-clamp-1">{news.title}</span>
+              </div>
+            </a>
+          ))
+        )}
+      </div>
+      <div class="text-center mt-10">
+        <a href="/news" class="inline-flex items-center text-primary-600 font-medium hover:text-primary-800 transition-colors">
+          お知らせ一覧へ
+          <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section id="about" class="py-20 bg-surface-50">
+     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl font-bold text-surface-900 mb-4 tracking-tight">会社概要</h2>
+        <div class="w-16 h-1 bg-accent-400 mx-auto rounded-full"></div>
+      </div>
+      <div class="bg-white rounded-2xl shadow-sm border border-surface-200 overflow-hidden">
+        <dl class="divide-y divide-surface-100">
+          <div class="px-6 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-8 hover:bg-surface-50 transition-colors">
+            <dt class="text-sm font-bold text-surface-500">会社名</dt>
+            <dd class="mt-1 text-sm text-surface-900 sm:mt-0 sm:col-span-2 font-black tracking-wide">ラフマット 株式会社（ S-GROUP ）</dd>
+          </div>
+          <div class="px-6 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-8 hover:bg-surface-50 transition-colors">
+            <dt class="text-sm font-bold text-surface-500">代表取締役社長</dt>
+            <dd class="mt-1 text-sm text-surface-900 sm:mt-0 sm:col-span-2 font-medium">畑中 淳二 (Junji Hatanaka)</dd>
+          </div>
+          <div class="px-6 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-8 hover:bg-surface-50 transition-colors">
+            <dt class="text-sm font-bold text-surface-500">所在地 (本社)</dt>
+            <dd class="mt-1 text-sm text-surface-900 sm:mt-0 sm:col-span-2 leading-relaxed">
+              〒064-0945<br />札幌市中央区盤渓 499-10
+            </dd>
+          </div>
+          <div class="px-6 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-8 hover:bg-surface-50 transition-colors">
+            <dt class="text-sm font-bold text-surface-500">連絡先</dt>
+            <dd class="mt-1 text-sm text-surface-900 sm:mt-0 sm:col-span-2 leading-relaxed">
+              <span class="inline-block w-20 text-surface-500">TEL</span> (011) 376-5690<br />
+              <span class="inline-block w-20 text-surface-500">FAX</span> (011) 376-5691
+            </dd>
+          </div>
+          <div class="px-6 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-8 hover:bg-surface-50 transition-colors">
+            <dt class="text-sm font-bold text-surface-500">事業内容</dt>
+            <dd class="mt-1 text-sm text-surface-900 sm:mt-0 sm:col-span-2">総合警備業全般、セキュリティシステムの提案・運用</dd>
+          </div>
+        </dl>
+      </div>
+     </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section id="recruit" class="py-24 bg-surface-100 border-t border-surface-200">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="text-3xl font-black text-primary-900 mb-6 tracking-tight">新しい一歩を、私たちと共に。</h2>
+      <p class="text-lg text-primary-700 mb-8 max-w-2xl mx-auto font-medium leading-relaxed">
+        現在、ラフマット株式会社では新しいメンバーを積極的に募集しています。<br class="hidden sm:block" />
+        面接時の履歴書は不要です。未経験からでも安心してスタートできます。
+      </p>
+
+      <div class="bg-white rounded-2xl shadow-sm border border-surface-200 p-8 max-w-4xl mx-auto mb-10 text-left">
+        <h3 class="text-xl font-bold text-surface-900 mb-6 text-center border-b border-surface-100 pb-4">交通誘導スタッフ 募集要項</h3>
+        
+        <ul class="space-y-4 text-surface-700 font-medium mb-8">
+          <li class="flex items-start">
+            <svg class="w-6 h-6 text-accent-500 mt-0.5 mr-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+            <div>
+              <strong class="text-surface-900 block text-lg mb-1">柔軟な働き方と給与</strong>
+              <span class="text-sm">日給9,100円～13,000円。日払い・週払い・月払いから選べます。週2日〜勤務OK！日勤のみ・夜勤のみも可能です。</span>
+            </div>
+          </li>
+          <li class="flex items-start">
+            <svg class="w-6 h-6 text-accent-500 mt-0.5 mr-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+            <div>
+              <strong class="text-surface-900 block text-lg mb-1">厚待遇とサポート体制</strong>
+              <span class="text-sm">入社祝い金10万円（規定あり）、賞与年2回、退職金制度あり。面接時・勤務時の送迎や、マイカー・バイク通勤も可能です（ガソリン代全額支給）。</span>
+            </div>
+          </li>
+          <li class="flex items-start">
+            <svg class="w-6 h-6 text-accent-500 mt-0.5 mr-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+            <div>
+              <strong class="text-surface-900 block text-lg mb-1">未経験・シニアも大歓迎！</strong>
+              <span class="text-sm">法定研修（20時間）で一から丁寧に教えます。18歳から60代以上まで幅広い層が活躍中。Wワークや主夫・主婦の方も歓迎です。</span>
+            </div>
+          </li>
+        </ul>
+
+        <!-- 詳細情報アコーディオン -->
+        <details class="group border border-surface-200 rounded-xl overflow-hidden mt-8">
+          <summary class="flex justify-between items-center font-bold cursor-pointer list-none p-5 bg-surface-50 hover:bg-surface-100 transition-colors">
+            <span class="text-primary-900 font-bold">詳しい募集要項（給与・休日・待遇など）を見る</span>
+            <span class="transition group-open:rotate-180">
+              <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+            </span>
+          </summary>
+          <div class="p-6 bg-white border-t border-surface-200 text-sm text-surface-700 leading-relaxed text-left">
+            <dl class="divide-y divide-surface-100">
+              <div class="py-4 grid grid-cols-1 md:grid-cols-3 gap-2">
+                <dt class="font-bold text-surface-900">仕事内容</dt>
+                <dd class="md:col-span-2">道路工事現場における交通誘導。車両や歩行者が安全に通行できるように案内します。</dd>
+              </div>
+              <div class="py-4 grid grid-cols-1 md:grid-cols-3 gap-2">
+                <dt class="font-bold text-surface-900">応募条件</dt>
+                <dd class="md:col-span-2">
+                  <ul class="list-disc pl-5 space-y-1">
+                    <li>18歳以上（※警備業法による）</li>
+                    <li>学歴不問、未経験・ブランクOK</li>
+                    <li>シニア（60代以上）積極採用</li>
+                    <li>扶養内、WワークOK</li>
+                  </ul>
+                </dd>
+              </div>
+              <div class="py-4 grid grid-cols-1 md:grid-cols-3 gap-2">
+                <dt class="font-bold text-surface-900">給与詳細</dt>
+                <dd class="md:col-span-2">
+                  <ul class="list-disc pl-5 space-y-1">
+                    <li><span class="font-bold">未経験者：</span>日給 9,100円 ＋ 残業・深夜手当</li>
+                    <li><span class="font-bold">経験者・資格保有者：</span>日給 9,100円～ ＋ 資格手当(月5000円～) ＋ 残業・深夜手当</li>
+                  </ul>
+                  <p class="mt-2 text-xs text-surface-500">※法定研修20hあり（21,500円／研修時お弁当支給）</p>
+                </dd>
+              </div>
+              <div class="py-4 grid grid-cols-1 md:grid-cols-3 gap-2">
+                <dt class="font-bold text-surface-900">勤務時間</dt>
+                <dd class="md:col-span-2">
+                  <p>シフト制・実働8時間（休憩1時間）</p>
+                  <p>【日勤】8:00～17:00 【夜勤】20:00〜5:00</p>
+                  <p class="mt-1 font-bold text-accent-600">★1日4時間を超えた勤務で日給全額支給保証！</p>
+                </dd>
+              </div>
+              <div class="py-4 grid grid-cols-1 md:grid-cols-3 gap-2">
+                <dt class="font-bold text-surface-900">休日・休暇</dt>
+                <dd class="md:col-span-2">年間休日106日以上（週休2日制などシフトによる）、GW・お盆・年末年始休あり、有給休暇（消化率80%以上）</dd>
+              </div>
+              <div class="py-4 grid grid-cols-1 md:grid-cols-3 gap-2">
+                <dt class="font-bold text-surface-900">待遇・福利厚生</dt>
+                <dd class="md:col-span-2">各種社会保険完備、交通費全額支給（ガソリン代含む）、送迎手当（1人往復1000円）、制服貸与（夏・冬用各種あり）、資格取得支援制度（会社負担）、賞与・退職金制度（※規定あり）髪型・髪色・ピアスOK</dd>
+              </div>
+            </dl>
+          </div>
+        </details>
+      </div>
+
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="#contact" class="px-8 py-4 bg-primary-800 hover:bg-primary-900 text-accent-400 font-bold rounded-full shadow-lg transition-all text-center border-2 border-primary-900 hover:border-black">
+          お問い合わせ・ご応募はこちら
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Form Section -->
+  <section id="contact" class="py-20 bg-white">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold text-surface-900 mb-4 tracking-tight">お問い合わせ</h2>
+        <div class="w-16 h-1 bg-accent-400 mx-auto rounded-full mb-6"></div>
+        <p class="text-surface-600">お仕事のご依頼、採用に関するご質問など、お気軽にお問い合わせください。</p>
+      </div>
+      
+      <div class="bg-surface-50 p-8 md:p-10 rounded-2xl shadow-sm border border-surface-200">
+        <!-- 問い合わせフォーム (Web3Forms連携) -->
+        <form id="contact-form" action="https://api.web3forms.com/submit" method="POST" class="space-y-6">
+          <!-- Web3Forms アクセスキー (環境変数から取得、なければプレースホルダー) -->
+          <input type="hidden" name="access_key" value={import.meta.env.WEB3FORMS_ACCESS_KEY || ""} />
+          <input type="hidden" name="subject" value="RAHMAT HPからの新規お問い合わせ" />
+          <input type="checkbox" name="botcheck" class="hidden" style="display: none;" />
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label for="name" class="block text-sm font-bold text-surface-700 mb-2">お名前 <span class="text-red-500">*</span></label>
+              <input type="text" name="name" id="name" required class="w-full px-4 py-3 rounded-lg border border-surface-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white shadow-sm transition-all" placeholder="山田 太郎" />
+            </div>
+            <div>
+              <label for="email" class="block text-sm font-bold text-surface-700 mb-2">メールアドレス <span class="text-red-500">*</span></label>
+              <input type="email" name="email" id="email" required class="w-full px-4 py-3 rounded-lg border border-surface-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white shadow-sm transition-all" placeholder="example@rahmat.jp" />
+            </div>
+          </div>
+          
+          <div>
+            <label for="type" class="block text-sm font-bold text-surface-700 mb-2">お問い合わせ種別</label>
+            <select id="type" name="type" class="w-full px-4 py-3 rounded-lg border border-surface-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white shadow-sm transition-all">
+              <option value="お仕事のご依頼・ご相談">お仕事のご依頼・ご相談</option>
+              <option value="採用・求人について">採用・求人について</option>
+              <option value="その他">その他</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="message" class="block text-sm font-bold text-surface-700 mb-2">お問い合わせ内容 <span class="text-red-500">*</span></label>
+            <textarea id="message" name="message" rows="5" required class="w-full px-4 py-3 rounded-lg border border-surface-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white shadow-sm transition-all resize-none" placeholder="こちらにお問い合わせ内容をご記入ください。"></textarea>
+          </div>
+
+          <div class="text-center pt-4">
+            <button type="submit" id="submit-button" class="px-10 py-4 bg-primary-800 hover:bg-primary-900 text-white font-bold rounded-lg shadow-md transition-all w-full sm:w-auto">
+              送信する
+            </button>
+            <p id="form-result" class="mt-4 font-bold text-sm hidden"></p>
+            <p class="mt-4 text-xs text-surface-500" id="form-note">※設定完了後、実際にメールが送信されるようになります。</p>
+          </div>
+        </form>
+
+        <script is:inline>
+          const form = document.getElementById('contact-form');
+          const result = document.getElementById('form-result');
+          const submitButton = document.getElementById('submit-button');
+          const formNote = document.getElementById('form-note');
+
+          form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const accessKey = form.querySelector('[name="access_key"]').value;
+            if (!accessKey) {
+                result.style.display = "block";
+                result.innerHTML = "現在システムの準備中です。しばらくお待ちください。";
+                result.className = "mt-4 font-bold text-sm text-red-500";
+                return;
+            }
+
+            const formData = new FormData(form);
+            const object = Object.fromEntries(formData);
+            const json = JSON.stringify(object);
+            
+            result.style.display = "block";
+            result.innerHTML = "送信中...";
+            result.className = "mt-4 font-bold text-sm text-surface-500";
+            submitButton.disabled = true;
+            submitButton.classList.add('opacity-50', 'cursor-not-allowed');
+
+            fetch('https://api.web3forms.com/submit', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: json
+                })
+                .then(async (response) => {
+                    let json = await response.json();
+                    if (response.status == 200) {
+                        result.innerHTML = "お問い合わせを送信しました。担当者からの連絡をお待ちください。";
+                        result.className = "mt-4 font-bold text-sm text-green-600";
+                        if (formNote) formNote.style.display = "none";
+                        form.reset();
+                    } else {
+                        console.log(response);
+                        result.innerHTML = json.message || "送信に失敗しました。";
+                        result.className = "mt-4 font-bold text-sm text-red-500";
+                    }
+                })
+                .catch(error => {
+                    console.log(error);
+                    result.innerHTML = "通信エラーが発生しました。時間をおいて再度お試しください。";
+                    result.className = "mt-4 font-bold text-sm text-red-500";
+                })
+                .finally(() => {
+                    submitButton.disabled = false;
+                    submitButton.classList.remove('opacity-50', 'cursor-not-allowed');
+                    setTimeout(() => {
+                        result.style.display = "none";
+                    }, 5000);
+                });
+          });
+        </script>
+      </div>
+    </div>
+  </section>
+</Layout>
