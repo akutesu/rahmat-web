@@ -1,0 +1,68 @@
+﻿---
+// Countdown.astro
+---
+
+<div id="countdown" class="hidden sm:flex items-center gap-2 px-3 py-1 bg-surface-800/50 backdrop-blur-sm rounded-full border border-surface-700/50 mr-4">
+  <div class="flex items-center gap-1.5">
+    <div class="flex flex-col items-center">
+      <span id="days" class="text-xs md:text-sm font-black text-accent-400 leading-none">00</span>
+      <span class="text-[0.45rem] font-bold text-surface-400 uppercase tracking-tighter">Days</span>
+    </div>
+    <span class="text-surface-600 font-bold mb-2">:</span>
+    <div class="flex flex-col items-center">
+      <span id="hours" class="text-xs md:text-sm font-black text-white leading-none">00</span>
+      <span class="text-[0.45rem] font-bold text-surface-400 uppercase tracking-tighter">Hrs</span>
+    </div>
+    <span class="text-surface-600 font-bold mb-2">:</span>
+    <div class="flex flex-col items-center">
+      <span id="minutes" class="text-xs md:text-sm font-black text-white leading-none">00</span>
+      <span class="text-[0.45rem] font-bold text-surface-400 uppercase tracking-tighter">Min</span>
+    </div>
+    <span class="text-surface-600 font-bold mb-2">:</span>
+    <div class="flex flex-col items-center">
+      <span id="seconds" class="text-xs md:text-sm font-black text-white leading-none">00</span>
+      <span class="text-[0.45rem] font-bold text-surface-400 uppercase tracking-tighter">Sec</span>
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+  function updateCountdown() {
+    const targetDate = new Date('2026-06-01T00:00:00+09:00').getTime();
+    
+    function update() {
+      const now = new Date().getTime();
+      const distance = targetDate - now;
+
+      if (distance < 0) {
+        document.getElementById('countdown').style.display = 'none';
+        return;
+      }
+
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      const daysEl = document.getElementById('days');
+      const hoursEl = document.getElementById('hours');
+      const minutesEl = document.getElementById('minutes');
+      const secondsEl = document.getElementById('seconds');
+
+      if (daysEl) daysEl.innerText = String(days).padStart(2, '0');
+      if (hoursEl) hoursEl.innerText = String(hours).padStart(2, '0');
+      if (minutesEl) minutesEl.innerText = String(minutes).padStart(2, '0');
+      if (secondsEl) secondsEl.innerText = String(seconds).padStart(2, '0');
+    }
+
+    update();
+    setInterval(update, 1000);
+  }
+
+  // Ensure it runs after the elements are in the DOM
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', updateCountdown);
+  } else {
+    updateCountdown();
+  }
+</script>
