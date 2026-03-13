@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import Countdown from '../components/Countdown.astro';
 
 interface Props {
   title: string;
@@ -64,6 +65,7 @@ const { title, description = 'ラフマット株式会社（RAHMAT road master�
             <a href="/#recruit" class="text-surface-600 hover:text-accent-600 font-medium transition-colors">採用情報</a>
           </nav>
           <div class="hidden md:flex items-center">
+            <Countdown />
             <a href="/#contact" class="inline-flex items-center justify-center px-6 py-2 border border-transparent rounded-full shadow-sm text-sm font-bold text-surface-900 bg-accent-400 hover:bg-accent-500 hover:shadow-md transition-all">
               お問い合わせ
             </a>
